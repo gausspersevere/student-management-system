@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIMS — Student Information Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   DESIGN SYSTEM
+   Dark academia / modern dashboard aesthetic
+   ========================================================= */
+:root {
+  --bg:        #080c14;
+  --surface:   #0f1420;
+  --card:      #141927;
+  --card2:     #1a2133;
+  --border:    #1e2d47;
+  --border2:   #253554;
+  --accent:    #3d6bfa;
+  --accent2:   #6c8fff;
+  --glow:      rgba(61,107,250,0.18);
+  --green:     #10d988;
+  --amber:     #f5a623;
+  --red:       #f04040;
+  --text:      #d8e4f0;
+  --muted:     #6a86a8;
+  --faint:     #374860;
+  --radius:    14px;
+  --radius-sm: 8px;
+  --shadow:    0 8px 40px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
+
+/* ---- HEADER ---- */
+header{
+  background:linear-gradient(180deg,var(--surface) 0%,rgba(15,20,32,0.95) 100%);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(12px);
+}
+.header-inner{
+  max-width:1380px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;height:68px;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-mark{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:grid;place-items:center;
+  font-size:18px;
+  box-shadow:0 0 18px var(--glow);
+}
+.logo-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;letter-spacing:.5px}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+
+.header-right{display:flex;align-items:center;gap:10px}
+.api-badge{
+  font-size:10px;font-weight:600;color:var(--accent2);
+  background:rgba(61,107,250,0.12);border:1px solid rgba(61,107,250,0.25);
+  border-radius:99px;padding:3px 10px;letter-spacing:.5px;
+}
+.dot{
+  width:7px;height:7px;border-radius:99px;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ---- MAIN LAYOUT ---- */
+main{max-width:1380px;margin:0 auto;padding:32px 28px}
+
+/* ---- STATS ---- */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  margin-bottom:28px;
+}
+.stat{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px 20px;
+  display:flex;align-items:center;gap:16px;
+  transition:border-color .2s,transform .2s;
+}
+.stat:hover{border-color:var(--border2);transform:translateY(-2px)}
+.stat-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:grid;place-items:center;font-size:20px;flex-shrink:0;
+}
+.si-blue{background:rgba(61,107,250,0.15)}
+.si-green{background:rgba(16,217,136,0.12)}
+.si-amber{background:rgba(245,166,35,0.12)}
+.si-purple{background:rgba(160,120,255,0.12)}
+.stat-num{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1}
+.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:4px}
+
+/* ---- TOOLBAR ---- */
+.toolbar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.toolbar-left{display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap}
+.toolbar-right{display:flex;gap:10px}
+
+select,input[type=text]{
+  background:var(--card);color:var(--text);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:9px 13px;font-family:inherit;font-size:13px;
+  outline:none;cursor:pointer;
+  transition:border-color .2s;
+  appearance:none;
+}
+select:hover,input[type=text]:hover{border-color:var(--border2)}
+select:focus,input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+select{padding-right:32px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236a86a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+
+input[type=text]{min-width:220px}
+input[type=text]::placeholder{color:var(--faint)}
+
+/* ---- BUTTONS ---- */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:var(--radius-sm);
+  font-family:inherit;font-size:13px;font-weight:600;
+  border:none;cursor:pointer;text-decoration:none;
+  transition:all .2s;white-space:nowrap;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  box-shadow:0 4px 18px var(--glow);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(61,107,250,.45)}
+.btn-success{background:rgba(16,217,136,.13);color:var(--green);border:1px solid rgba(16,217,136,.25)}
+.btn-success:hover{background:rgba(16,217,136,.22)}
+.btn-warning{background:rgba(245,166,35,.13);color:var(--amber);border:1px solid rgba(245,166,35,.25)}
+.btn-warning:hover{background:rgba(245,166,35,.22)}
+.btn-danger{background:rgba(240,64,64,.13);color:var(--red);border:1px solid rgba(240,64,64,.25)}
+.btn-danger:hover{background:rgba(240,64,64,.22)}
+.btn-ghost{background:rgba(106,134,168,.08);color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(106,134,168,.15);color:var(--text)}
+.btn-sm{padding:6px 12px;font-size:12px}
+
+/* ---- TABLE ---- */
+.table-wrap{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--card2);border-bottom:1px solid var(--border)}
+th{
+  padding:13px 16px;
+  font-size:10px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.9px;
+  text-align:left;white-space:nowrap;
+}
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--text)}
+th.sort-active{color:var(--accent2)}
+td{
+  padding:13px 16px;
+  font-size:13px;
+  border-bottom:1px solid rgba(30,45,71,0.5);
+  vertical-align:middle;
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.015)}
+
+.student-name{font-weight:600;font-size:14px;color:var(--text)}
+.student-meta{font-size:11px;color:var(--muted);margin-top:2px}
+
+.badge{
+  display:inline-flex;align-items:center;
+  padding:3px 10px;border-radius:99px;
+  font-size:11px;font-weight:600;letter-spacing:.3px;
+}
+.badge-male{background:rgba(61,107,250,.15);color:var(--accent2)}
+.badge-female{background:rgba(255,100,180,.12);color:#ff85c2}
+.badge-other{background:rgba(245,166,35,.12);color:var(--amber)}
+
+.grade-badge{
+  display:inline-block;padding:4px 12px;border-radius:99px;
+  font-size:12px;font-weight:700;
+}
+.grade-high{background:rgba(16,217,136,.15);color:var(--green)}
+.grade-mid{background:rgba(245,166,35,.15);color:var(--amber)}
+.grade-low{background:rgba(240,64,64,.15);color:var(--red)}
+.grade-none{background:rgba(106,134,168,.1);color:var(--muted)}
+
+.subject-pill{
+  display:inline-block;padding:2px 8px;border-radius:5px;
+  background:rgba(30,45,71,0.7);font-size:11px;
+  margin:1px;border:1px solid var(--border);
+}
+.subject-grade{color:var(--accent2);font-weight:600}
+
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ---- EMPTY STATE ---- */
+.empty{
+  text-align:center;padding:64px 20px;
+}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:.4}
+.empty-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px;color:var(--muted)}
+.empty-sub{font-size:13px;color:var(--faint);margin-bottom:20px}
+
+/* ---- TOAST ---- */
+.toast-area{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+.toast{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 18px;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:500;
+  box-shadow:var(--shadow);
+  animation:slideIn .3s ease;
+  min-width:260px;max-width:380px;
+}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.success{background:#0d2319;border:1px solid rgba(16,217,136,.3);color:var(--green)}
+.toast.error{background:#1f0d0d;border:1px solid rgba(240,64,64,.3);color:var(--red)}
+.toast.info{background:#0d1525;border:1px solid rgba(61,107,250,.3);color:var(--accent2)}
+
+/* ---- MODAL ---- */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.7);
+  z-index:500;display:none;place-items:center;
+  backdrop-filter:blur(4px);
+}
+.overlay.open{display:grid}
+.modal{
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:32px;
+  width:min(560px,94vw);
+  box-shadow:var(--shadow);
+  animation:modalIn .25s ease;
+  max-height:90vh;overflow-y:auto;
+}
+@keyframes modalIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.modal-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}
+.modal-close{
+  width:30px;height:30px;border-radius:7px;
+  background:rgba(106,134,168,.1);border:1px solid var(--border);
+  color:var(--muted);cursor:pointer;font-size:16px;
+  display:grid;place-items:center;
+  transition:all .2s;
+}
+.modal-close:hover{background:rgba(240,64,64,.15);color:var(--red);border-color:rgba(240,64,64,.3)}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:16px}
+.form-label{
+  display:block;font-size:10px;font-weight:700;color:var(--muted);
+  letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px;
+}
+.form-control{
+  width:100%;background:var(--surface);color:var(--text);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:10px 13px;font-family:inherit;font-size:13px;
+  outline:none;transition:border-color .2s;appearance:none;
+}
+.form-control:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236a86a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
+.form-divider{height:1px;background:var(--border);margin:18px 0 16px}
+.form-section-label{font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px}
+.modal-footer{display:flex;gap:10px;margin-top:24px}
+.modal-footer .btn{flex:1;justify-content:center}
+.field-error{font-size:11px;color:var(--red);margin-top:4px}
+
+/* ---- LOADING ---- */
+.loading-row td{text-align:center;padding:48px;color:var(--muted)}
+.spinner{
+  width:28px;height:28px;border:3px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .7s linear infinite;display:inline-block;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:900px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+  th:nth-child(6),td:nth-child(6){display:none}
+}
+@media(max-width:600px){
+  main{padding:16px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .toolbar{flex-direction:column;align-items:stretch}
+  .toolbar-right{justify-content:flex-end}
+  th:nth-child(4),td:nth-child(4),
+  th:nth-child(7),td:nth-child(7){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">🎓</div>
+      <div>
+        <div class="logo-title">SIMS</div>
+        <div class="logo-sub">Student Information System</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="api-badge">ASP.NET Core API</span>
+      <div class="dot" title="API Connected"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+  <!-- Stats -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat"><div class="stat-icon si-blue">👩‍🎓</div><div><div class="stat-num" id="statStudents">—</div><div class="stat-label">Students</div></div></div>
+    <div class="stat"><div class="stat-icon si-green">📚</div><div><div class="stat-num" id="statCourses">—</div><div class="stat-label">Courses</div></div></div>
+    <div class="stat"><div class="stat-icon si-amber">📖</div><div><div class="stat-num" id="statSubjects">—</div><div class="stat-label">Subjects</div></div></div>
+    <div class="stat"><div class="stat-icon si-purple">⭐</div><div><div class="stat-num" id="statAvg">—</div><div class="stat-label">Avg Grade</div></div></div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <input type="text" id="searchInput" placeholder="🔍  Search students…" oninput="filterLocal()">
+      <select id="filterCourse" onchange="loadStudents()">
+        <option value="">All Courses</option>
+      </select>
+      <select id="filterGender" onchange="loadStudents()">
+        <option value="">All Genders</option>
+      </select>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-success" onclick="openGradeModal()">📊 Assign Grade</button>
+      <button class="btn btn-primary" onclick="openAddModal()">➕ Add Student</button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th class="sortable sort-active" onclick="toggleSort('lastname')" id="sort-lastname">NAME ↕</th>
+          <th class="sortable" onclick="toggleSort('age')" id="sort-age">AGE</th>
+          <th>GENDER</th>
+          <th>COURSE</th>
+          <th>SECTION</th>
+          <th>SUBJECTS & GRADES</th>
+          <th class="sortable" onclick="toggleSort('grade')" id="sort-grade">AVG GRADE</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody id="studentTableBody">
+        <tr class="loading-row"><td colspan="9"><div class="spinner"></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div class="toast-area" id="toastArea"></div>
+
+<!-- ===== ADD / EDIT MODAL ===== -->
+<div class="overlay" id="studentOverlay" onclick="closeModal(event, 'studentOverlay')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Add New Student</div>
+      <button class="modal-close" onclick="closeModalById('studentOverlay')">✕</button>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">First Name *</label>
+        <input class="form-control" id="fFirstName" type="text" placeholder="e.g. Juan">
+        <div class="field-error" id="errFirstName"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last Name *</label>
+        <input class="form-control" id="fLastName" type="text" placeholder="e.g. dela Cruz">
+        <div class="field-error" id="errLastName"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Birthdate *</label>
+      <input class="form-control" id="fBirthdate" type="date">
+      <div class="field-error" id="errBirthdate"></div>
+    </div>
+
+    <div class="form-divider"></div>
+    <div class="form-section-label">Academic Information</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Course *</label>
+        <select class="form-control" id="fCourse">
+          <option value="">— Select Course —</option>
+        </select>
+        <div class="field-error" id="errCourse"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Section *</label>
+        <select class="form-control" id="fSection">
+          <option value="">— Select Section —</option>
+        </select>
+        <div class="field-error" id="errSection"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Gender *</label>
+      <select class="form-control" id="fGender">
+        <option value="">— Select Gender —</option>
+      </select>
+      <div class="field-error" id="errGender"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModalById('studentOverlay')">Cancel</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="saveStudent()">✅ Save Student</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GRADE MODAL ===== -->
+<div class="overlay" id="gradeOverlay" onclick="closeModal(event, 'gradeOverlay')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <div class="modal-title">📊 Assign Grade</div>
+      <button class="modal-close" onclick="closeModalById('gradeOverlay')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Student *</label>
+      <select class="form-control" id="gStudent"><option value="">— Select Student —</option></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Subject *</label>
+      <select class="form-control" id="gSubject"><option value="">— Select Subject —</option></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Grade (0–100) *</label>
+      <input class="form-control" id="gGrade" type="number" min="0" max="100" step="0.01" placeholder="e.g. 87.50">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModalById('gradeOverlay')">Cancel</button>
+      <button class="btn btn-success" onclick="saveGrade()">💾 Save Grade</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+// ============================================================
+// API Configuration
+// Change this to your Render backend URL when deployed.
+// Locally: http://localhost:5000
+// Render:  https://your-app-name.onrender.com
+// ============================================================
+const API_BASE = 'http://localhost:5000/api';
+
+// State
+let allStudents = [];
+let sortBy  = 'lastname';
+let sortOrder = 'ASC';
+let editingId = null;
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+document.addEventListener('DOMContentLoaded', async () => {
+  await Promise.all([
+    loadStats(),
+    loadDropdowns(),
+    loadStudents(),
+  ]);
+});
+
+// ============================================================
+// DATA FETCHING
+// Each function calls a specific API endpoint.
+// In PHP, data was fetched inline during page render.
+// Here, we fetch asynchronously using the Fetch API.
+// ============================================================
+
+async function loadStats() {
+  try {
+    const res = await fetch(`${API_BASE}/lookups/stats`);
+    const data = await res.json();
+    document.getElementById('statStudents').textContent = data.totalStudents ?? '—';
+    document.getElementById('statCourses').textContent  = data.totalCourses ?? '—';
+    document.getElementById('statSubjects').textContent = data.totalSubjects ?? '—';
+    document.getElementById('statAvg').textContent      = data.averageGrade != null ? data.averageGrade.toFixed(2) : '—';
+  } catch { /* fail silently for stats */ }
+}
+
+async function loadDropdowns() {
+  const [courses, sections, genders, subjects] = await Promise.all([
+    fetchJson(`${API_BASE}/lookups/courses`),
+    fetchJson(`${API_BASE}/lookups/sections`),
+    fetchJson(`${API_BASE}/lookups/genders`),
+    fetchJson(`${API_BASE}/lookups/subjects`),
+  ]);
+
+  // Filter dropdowns in toolbar
+  populateSelect('filterCourse', courses, 'All Courses');
+  populateSelect('filterGender', genders, 'All Genders');
+
+  // Modal dropdowns
+  populateSelect('fCourse',  courses,  '— Select Course —');
+  populateSelect('fSection', sections, '— Select Section —');
+  populateSelect('fGender',  genders,  '— Select Gender —');
+
+  // Grade modal dropdowns
+  populateSelect('gSubject', subjects, '— Select Subject —');
+}
+
+async function loadStudents() {
+  const courseId = document.getElementById('filterCourse').value;
+  const genderId = document.getElementById('filterGender').value;
+
+  let url = `${API_BASE}/students?sortBy=${sortBy}&order=${sortOrder}`;
+  if (courseId) url += `&courseId=${courseId}`;
+  if (genderId) url += `&genderId=${genderId}`;
+
+  setTableLoading();
+
+  try {
+    allStudents = await fetchJson(url);
+    renderTable(allStudents);
+    await updateGradeModalStudents();
+  } catch (err) {
+    showError('Failed to load students. Is the API running?');
+    document.getElementById('studentTableBody').innerHTML = `
+      <tr><td colspan="9"><div class="empty">
+        <div class="empty-icon">⚠️</div>
+        <div class="empty-title">Cannot connect to API</div>
+        <div class="empty-sub">Make sure your ASP.NET Core backend is running at<br><strong>${API_BASE}</strong></div>
+      </div></td></tr>`;
+  }
+}
+
+// ============================================================
+// TABLE RENDERING
+// In PHP this was <?php while($row = mysqli_fetch_assoc()) ?>
+// Here we build HTML strings in JavaScript and inject them.
+// ============================================================
+function renderTable(students) {
+  const tbody = document.getElementById('studentTableBody');
+
+  if (!students.length) {
+    tbody.innerHTML = `
+      <tr><td colspan="9"><div class="empty">
+        <div class="empty-icon">🎓</div>
+        <div class="empty-title">No students found</div>
+        <div class="empty-sub">Try adjusting your filters, or add a new student.</div>
+        <button class="btn btn-primary" onclick="openAddModal()">➕ Add First Student</button>
+      </div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = students.map((s, i) => {
+    const genderClass = s.genderName.toLowerCase().includes('female') ? 'badge-female'
+                      : s.genderName.toLowerCase().includes('male')   ? 'badge-male'
+                      : 'badge-other';
+
+    const avg = s.averageGrade;
+    const gradeClass = avg == null ? 'grade-none'
+                     : avg >= 90  ? 'grade-high'
+                     : avg >= 75  ? 'grade-mid'
+                     : 'grade-low';
+    const gradeDisplay = avg != null ? avg.toFixed(2) : '—';
+
+    const subjectPills = s.grades.map(g =>
+      `<span class="subject-pill">${esc(g.subjectName)}: <span class="subject-grade">${g.grade.toFixed(1)}</span></span>`
+    ).join('') || '<span style="color:var(--faint);font-size:12px">No grades yet</span>';
+
+    return `
+    <tr>
+      <td style="color:var(--faint);font-size:12px">${i + 1}</td>
+      <td>
+        <div class="student-name">${esc(s.lastName)}, ${esc(s.firstName)}</div>
+        <div class="student-meta">ID #${s.studentId}</div>
+      </td>
+      <td>
+        <div>${s.age} yrs</div>
+        <div class="student-meta">${formatDate(s.birthdate)}</div>
+      </td>
+      <td><span class="badge ${genderClass}">${esc(s.genderName)}</span></td>
+      <td style="font-size:12px;max-width:160px">${esc(s.courseName)}</td>
+      <td style="font-size:12px">${esc(s.sectionName)}</td>
+      <td style="max-width:200px">${subjectPills}</td>
+      <td><span class="grade-badge ${gradeClass}">${gradeDisplay}</span></td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-sm btn-warning" onclick="openEditModal(${s.studentId})">✏️ Edit</button>
+          <button class="btn btn-sm btn-danger"  onclick="deleteStudent(${s.studentId}, '${esc(s.firstName)} ${esc(s.lastName)}')">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ============================================================
+// CRUD OPERATIONS — these call the API using fetch()
+// ============================================================
+
+// CREATE / UPDATE — POST /api/students or PUT /api/students/{id}
+async function saveStudent() {
+  clearErrors();
+
+  const body = {
+    firstName:  document.getElementById('fFirstName').value.trim(),
+    lastName:   document.getElementById('fLastName').value.trim(),
+    birthdate:  document.getElementById('fBirthdate').value,
+    courseId:   parseInt(document.getElementById('fCourse').value) || 0,
+    sectionId:  parseInt(document.getElementById('fSection').value) || 0,
+    genderId:   parseInt(document.getElementById('fGender').value) || 0,
+  };
+
+  // Client-side validation
+  let valid = true;
+  if (!body.firstName)  { showFieldError('errFirstName', 'First name is required.'); valid = false; }
+  if (!body.lastName)   { showFieldError('errLastName', 'Last name is required.'); valid = false; }
+  if (!body.birthdate)  { showFieldError('errBirthdate', 'Birthdate is required.'); valid = false; }
+  if (!body.courseId)   { showFieldError('errCourse', 'Please select a course.'); valid = false; }
+  if (!body.sectionId)  { showFieldError('errSection', 'Please select a section.'); valid = false; }
+  if (!body.genderId)   { showFieldError('errGender', 'Please select a gender.'); valid = false; }
+  if (!valid) return;
+
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.textContent = '⏳ Saving…';
+  saveBtn.disabled = true;
+
+  try {
+    const url    = editingId ? `${API_BASE}/students/${editingId}` : `${API_BASE}/students`;
+    const method = editingId ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Save failed');
+    }
+
+    closeModalById('studentOverlay');
+    showSuccess(editingId ? '✅ Student updated!' : '✅ Student added!');
+    await loadStudents();
+    await loadStats();
+
+  } catch (err) {
+    showError(`Error: ${err.message}`);
+  } finally {
+    saveBtn.textContent = '✅ Save Student';
+    saveBtn.disabled = false;
+  }
+}
+
+// DELETE — DELETE /api/students/{id}
+async function deleteStudent(id, name) {
+  if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/students/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Delete failed');
+    showSuccess('🗑️ Student deleted.');
+    await loadStudents();
+    await loadStats();
+  } catch (err) {
+    showError('Failed to delete student.');
+  }
+}
+
+// ASSIGN GRADE — POST /api/students/grades
+async function saveGrade() {
+  const studentId = parseInt(document.getElementById('gStudent').value) || 0;
+  const subjectId = parseInt(document.getElementById('gSubject').value) || 0;
+  const grade     = parseFloat(document.getElementById('gGrade').value);
+
+  if (!studentId || !subjectId || isNaN(grade)) {
+    showError('Please fill in all grade fields.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/students/grades`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentId, subjectId, grade }),
+    });
+    if (!res.ok) throw new Error('Grade save failed');
+    closeModalById('gradeOverlay');
+    showSuccess('📊 Grade saved successfully!');
+    await loadStudents();
+    await loadStats();
+  } catch (err) {
+    showError('Failed to save grade.');
+  }
+}
+
+// ============================================================
+// MODAL HELPERS
+// ============================================================
+function openAddModal() {
+  editingId = null;
+  clearForm();
+  document.getElementById('modalTitle').textContent = '➕ Add New Student';
+  document.getElementById('saveBtn').textContent = '✅ Save Student';
+  document.getElementById('studentOverlay').classList.add('open');
+}
+
+async function openEditModal(id) {
+  editingId = id;
+  document.getElementById('modalTitle').textContent = '✏️ Edit Student';
+  document.getElementById('saveBtn').textContent = '💾 Update Student';
+  clearForm();
+
+  try {
+    const s = await fetchJson(`${API_BASE}/students/${id}`);
+    document.getElementById('fFirstName').value = s.firstName;
+    document.getElementById('fLastName').value  = s.lastName;
+    document.getElementById('fBirthdate').value = s.birthdate;
+    document.getElementById('fCourse').value    = s.courseId;
+    document.getElementById('fSection').value   = s.sectionId;
+    document.getElementById('fGender').value    = s.genderId;
+    document.getElementById('studentOverlay').classList.add('open');
+  } catch {
+    showError('Failed to load student data.');
+  }
+}
+
+function openGradeModal() {
+  document.getElementById('gStudent').value = '';
+  document.getElementById('gSubject').value = '';
+  document.getElementById('gGrade').value   = '';
+  document.getElementById('gradeOverlay').classList.add('open');
+}
+
+async function updateGradeModalStudents() {
+  const sel = document.getElementById('gStudent');
+  sel.innerHTML = '<option value="">— Select Student —</option>';
+  allStudents.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.studentId;
+    opt.textContent = `${s.lastName}, ${s.firstName} (#${s.studentId})`;
+    sel.appendChild(opt);
+  });
+}
+
+function closeModal(event, id) {
+  if (event.target.id === id) closeModalById(id);
+}
+function closeModalById(id) {
+  document.getElementById(id).classList.remove('open');
+}
+function clearForm() {
+  ['fFirstName','fLastName','fBirthdate','fCourse','fSection','fGender'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  clearErrors();
+}
+
+// ============================================================
+// SORTING
+// ============================================================
+function toggleSort(col) {
+  if (sortBy === col) {
+    sortOrder = sortOrder === 'ASC' ? 'DESC' : 'ASC';
+  } else {
+    sortBy = col;
+    sortOrder = 'ASC';
+  }
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.classList.remove('sort-active');
+    th.textContent = th.textContent.replace(/ [↑↓↕]/,'');
+  });
+  const th = document.getElementById(`sort-${col}`);
+  if (th) {
+    th.classList.add('sort-active');
+    th.textContent += sortOrder === 'ASC' ? ' ↑' : ' ↓';
+  }
+  loadStudents();
+}
+
+// ============================================================
+// LOCAL SEARCH (client-side, no API call needed)
+// ============================================================
+function filterLocal() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  if (!q) { renderTable(allStudents); return; }
+  const filtered = allStudents.filter(s =>
+    s.firstName.toLowerCase().includes(q) ||
+    s.lastName.toLowerCase().includes(q) ||
+    s.courseName.toLowerCase().includes(q) ||
+    s.sectionName.toLowerCase().includes(q)
+  );
+  renderTable(filtered);
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+async function fetchJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+function populateSelect(id, items, placeholder) {
+  const sel = document.getElementById(id);
+  const first = sel.options[0]?.text || placeholder;
+  sel.innerHTML = `<option value="">${first}</option>`;
+  items.forEach(item => {
+    const opt = document.createElement('option');
+    opt.value = item.id;
+    opt.textContent = item.name;
+    sel.appendChild(opt);
+  });
+}
+
+function setTableLoading() {
+  document.getElementById('studentTableBody').innerHTML =
+    `<tr class="loading-row"><td colspan="9"><div class="spinner"></div></td></tr>`;
+}
+
+function formatDate(str) {
+  if (!str) return '';
+  const d = new Date(str);
+  return d.toLocaleDateString('en-PH', { month:'short', day:'2-digit', year:'numeric' });
+}
+
+function esc(str) {
+  const div = document.createElement('div');
+  div.textContent = str ?? '';
+  return div.innerHTML;
+}
+
+// ---- Toasts ----
+function showToast(msg, type='info') {
+  const area = document.getElementById('toastArea');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+  toast.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+  area.appendChild(toast);
+  setTimeout(() => { toast.style.animation = 'none'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3500);
+}
+function showSuccess(m) { showToast(m, 'success') }
+function showError(m)   { showToast(m, 'error') }
+
+// ---- Field errors ----
+function showFieldError(id, msg) { document.getElementById(id).textContent = msg; }
+function clearErrors() {
+  ['errFirstName','errLastName','errBirthdate','errCourse','errSection','errGender']
+    .forEach(id => { document.getElementById(id).textContent = ''; });
+}
+</script>
+</body>
+</html>

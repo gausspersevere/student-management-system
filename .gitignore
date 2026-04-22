@@ -1,0 +1,30 @@
+## .gitignore for ASP.NET Core + Frontend
+
+# Build outputs
+bin/
+obj/
+publish/
+out/
+
+# User-specific files
+*.user
+*.suo
+.vs/
+
+# Environment / secrets (NEVER commit these)
+appsettings.Development.json
+*.env
+.env
+
+# macOS
+.DS_Store
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+packages/

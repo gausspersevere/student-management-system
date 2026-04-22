@@ -82,7 +82,7 @@ builder.Services.AddCors(options =>
 // Render dynamically assigns a port via the PORT environment variable.
 // Your API MUST listen on that port or Render will think it crashed.
 // ============================================================
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 // ============================================================

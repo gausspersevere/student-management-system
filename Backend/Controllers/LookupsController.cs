@@ -83,4 +83,31 @@ public class LookupsController : ControllerBase
             averageGrade = avgGrade.HasValue ? Math.Round(avgGrade.Value, 2) : (double?)null,
         });
     }
+    // Temporary diagnostic endpoint — remove after fixing
+[HttpGet("dbtest")]
+public async Task<IActionResult> TestDb()
+{
+    try
+    {
+        var canConnect = await _db.Database.CanConnectAsync();
+        var studentCount = canConnect ? await _db.Students.CountAsync() : -1;
+        return Ok(new
+        {
+            canConnect,
+            studentCount,
+            database = _db.Database.GetConnectionString()?.Split(';')
+                .Where(p => !p.Contains("Password") && !p.Contains("password"))
+                .ToArray()
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new
+        {
+            error = ex.Message,
+            innerError = ex.InnerException?.Message,
+            type = ex.GetType().Name
+        });
+    }
+}
 }

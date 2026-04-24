@@ -122,8 +122,6 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";   // Visit /swagger to test your API
 });
 
-// Redirect HTTP → HTTPS (Render handles SSL termination)
-app.UseHttpsRedirection();
 
 // Enable CORS before routing
 app.UseCors("AllowFrontend");

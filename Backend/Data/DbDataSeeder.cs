@@ -108,7 +108,7 @@ public static class DbDataSeeder
             db.Genders.AddRange(
                 new Models.Gender { GenderName = "Male" },
                 new Models.Gender { GenderName = "Female" },
-                new Models.Gender { GenderName = "Other" }
+                new Models.Gender { GenderName = "Prefer no to say" }
             );
         }
 

@@ -4,14 +4,12 @@
 
 This project is a **Student Information Management System (SIMS)** that performs full **CRUD operations** — Create, Read, Update, and Delete — for managing student records including their courses, sections, genders, subjects, and grades.
 
-The system was originally built using **PHP, XAMPP, and MySQL** as a traditional server-rendered web application. It has since been **fully refactored** into a modern, cloud-deployed architecture using:
 
 - **Backend:** ASP.NET Core 8 Web API
 - **Frontend:** Vanilla HTML/CSS/JavaScript (Single Page Application)
 - **Database:** MySQL hosted on Aiven Cloud
 - **Deployment:** Render (API) + GitHub Pages (Frontend)
 
-This refactoring demonstrates the transition from a monolithic PHP approach to a clean, separated, API-first architecture — a standard pattern used in professional software development.
 
 ---
 
@@ -19,7 +17,7 @@ This refactoring demonstrates the transition from a monolithic PHP approach to a
 
 | Layer | Technology | URL |
 |---|---|---|
-| 🖥️ Frontend | GitHub Pages | [View Frontend](https://YOURUSERNAME.github.io/student-management-system/) |
+| 🖥️ Frontend | GitHub Pages | [View Frontend](https://gausspersevere.github.io/student-management-system/) |
 | ⚙️ Backend API | Render + ASP.NET Core | [View API](https://student-management-system-h4mm.onrender.com) |
 | 📋 API Docs | Swagger UI | [View Swagger](https://student-management-system-h4mm.onrender.com/swagger) |
 

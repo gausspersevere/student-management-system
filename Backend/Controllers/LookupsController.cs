@@ -7,8 +7,6 @@
 //   GET /api/lookups/genders   → replaces: SELECT * FROM gender
 //   GET /api/lookups/subjects  → replaces: SELECT * FROM subject
 //
-// In PHP these were scattered queries inside add_student.php
-// and edit_student.php. Here they live in one dedicated controller.
 // ============================================================
 
 using Microsoft.AspNetCore.Mvc;

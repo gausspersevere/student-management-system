@@ -1,22 +1,10 @@
-// ============================================================
-// Program.cs  — Application Entry Point
-//
-// PHP EQUIVALENT: This replaces config.php + Apache's auto-routing.
-// In PHP, Apache automatically found your .php files and ran them.
-// Here, YOU configure the request pipeline, database, and routes.
-//
-// This is where Render deployment config lives too.
-// ============================================================
 
 using Microsoft.EntityFrameworkCore;
 using StudentMS.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ============================================================
-// STEP 1: Register Services (Dependency Injection Container)
-// Think of this as declaring what your app needs to function.
-// ============================================================
+
 
 // Controllers — registers all classes ending in "Controller"
 builder.Services.AddControllers();
@@ -33,17 +21,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// ============================================================
-// STEP 2: Database Connection (MySQL via Entity Framework Core)
-//
-// PHP equivalent:
-//   $conn = mysqli_connect("localhost", "root", "", "student_management_db");
-//
-// Here we read from environment variables (safe!) instead of
-// hardcoded credentials. On Render, you set these in the dashboard.
-// Locally, you set them in appsettings.Development.json.
-// ============================================================
-
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? Environment.GetEnvironmentVariable("DATABASE_URL")
     ?? throw new InvalidOperationException(
@@ -58,13 +35,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
-// ============================================================
-// STEP 3: CORS (Cross-Origin Resource Sharing)
-//
-// This is REQUIRED because your HTML frontend (running on a
-// different port or domain) will make fetch() calls to this API.
-// PHP didn't need this because the HTML and PHP were on the SAME server.
-// ============================================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -76,12 +46,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ============================================================
-// STEP 4: Configure the PORT for Render
-//
-// Render dynamically assigns a port via the PORT environment variable.
-// Your API MUST listen on that port or Render will think it crashed.
-// ============================================================
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
@@ -90,11 +54,6 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 // ============================================================
 var app = builder.Build();
 
-// ============================================================
-// STEP 5: Auto-apply migrations on startup
-// This ensures your MySQL tables exist before requests come in.
-// Equivalent to importing setup.sql in phpMyAdmin.
-// ============================================================
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -109,12 +68,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// ============================================================
-// STEP 6: Middleware Pipeline
-// Requests flow through these in order — like PHP's include chain.
-// ============================================================
-
-// Swagger always available (you can restrict to dev-only if needed)
+// Swagger always available
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

@@ -1,13 +1,3 @@
-// ============================================================
-// Data/ApplicationDbContext.cs
-//
-// This is the EQUIVALENT of your config.php + all SQL queries.
-// In PHP you called mysqli_connect() and wrote raw SQL strings.
-// Here, EF Core handles the connection AND translates C# LINQ
-// expressions into SQL automatically.
-//
-// Think of DbContext as your "database manager class".
-// ============================================================
 
 using Microsoft.EntityFrameworkCore;
 using StudentMS.Api.Models;

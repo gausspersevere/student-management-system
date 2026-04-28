@@ -6,10 +6,7 @@
 <title>SIMS — Student Information Management System</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* =========================================================
-   DESIGN SYSTEM
-   Dark academia / modern dashboard aesthetic
-   ========================================================= */
+
 :root {
   --bg:        #080c14;
   --surface:   #0f1420;
@@ -468,12 +465,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 
 <!-- ===== JAVASCRIPT ===== -->
 <script>
-// ============================================================
-// API Configuration
-// Change this to your Render backend URL when deployed.
-// Locally: http://localhost:5000
-// Render:  https://your-app-name.onrender.com
-// ============================================================
+
 const API_BASE = 'https://student-management-system-h4mm.onrender.com/api';
 
 // State
@@ -493,12 +485,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   ]);
 });
 
-// ============================================================
-// DATA FETCHING
-// Each function calls a specific API endpoint.
-// In PHP, data was fetched inline during page render.
-// Here, we fetch asynchronously using the Fetch API.
-// ============================================================
+
 
 async function loadStats() {
   try {
@@ -557,11 +544,7 @@ async function loadStudents() {
   }
 }
 
-// ============================================================
-// TABLE RENDERING
-// In PHP this was <?php while($row = mysqli_fetch_assoc()) ?>
-// Here we build HTML strings in JavaScript and inject them.
-// ============================================================
+
 function renderTable(students) {
   const tbody = document.getElementById('studentTableBody');
 
@@ -618,9 +601,7 @@ function renderTable(students) {
   }).join('');
 }
 
-// ============================================================
-// CRUD OPERATIONS — these call the API using fetch()
-// ============================================================
+
 
 // CREATE / UPDATE — POST /api/students or PUT /api/students/{id}
 async function saveStudent() {
@@ -804,7 +785,7 @@ function toggleSort(col) {
 }
 
 // ============================================================
-// LOCAL SEARCH (client-side, no API call needed)
+// LOCAL SEARCH
 // ============================================================
 function filterLocal() {
   const q = document.getElementById('searchInput').value.toLowerCase();

@@ -1,11 +1,4 @@
-# ============================================================
-# render.yaml — Render Deployment Configuration
-#
-# This file tells Render how to build and run your ASP.NET API.
-# Commit this file to the ROOT of your GitHub repository.
-#
-# Render reads this automatically when you connect your repo.
-# ============================================================
+
 
 services:
   - type: web
@@ -25,13 +18,10 @@ services:
     startCommand: dotnet ./publish/StudentMS.Api.dll
     
     # ---- ENVIRONMENT VARIABLES ----
-    # These are set in Render's dashboard (not hardcoded here for security)
-    # Go to: Render Dashboard → Your Service → Environment
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       
-      # Set this in Render dashboard with your actual MySQL connection string
-      # Format: Server=HOST;Port=3306;Database=DB_NAME;User=USER;Password=PASS;
+    
       - key: ConnectionStrings__DefaultConnection
-        sync: false   # means: enter this manually in Render dashboard
+        sync: false   

@@ -1,11 +1,4 @@
-// ============================================================
-// DTOs/StudentDtos.cs
-//
-// DTOs (Data Transfer Objects) control what data flows in/out
-// of your API endpoints. In PHP, you had no DTOs — the raw
-// database row was mixed directly into HTML. Here we separate
-// the database shape from what the API exposes.
-// ============================================================
+
 
 namespace StudentMS.Api.DTOs;
 

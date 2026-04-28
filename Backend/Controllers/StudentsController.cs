@@ -7,9 +7,6 @@
 //   edit_student.php (UPDATE)    → PUT /api/students/{id}
 //   delete.php (DELETE)          → DELETE /api/students/{id}
 //
-// KEY DIFFERENCE: In PHP, one file mixed HTML + SQL + validation.
-// Here, each HTTP verb has its own clean method. The controller
-// only handles HTTP — no HTML, no CSS, just data in/out as JSON.
 // ============================================================
 
 using Microsoft.AspNetCore.Mvc;

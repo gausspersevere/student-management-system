@@ -1,9 +1,4 @@
-// ============================================================
-// Models/Student.cs
-// Equivalent to the `students` table in your MySQL database.
-// In PHP you had no model class — data was just associative
-// arrays from mysqli_fetch_assoc(). Here we define it explicitly.
-// ============================================================
+
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
